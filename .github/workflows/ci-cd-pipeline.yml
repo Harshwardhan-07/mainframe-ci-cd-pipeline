@@ -25,10 +25,15 @@ jobs:
     - name: Set up COBOL (Install GNU COBOL compiler)
       run: |
         sudo apt-get update
-        sudo apt-get install -y software-properties-common
-        sudo add-apt-repository ppa:gnucobol/gnucobol-3.0
-        sudo apt-get update
-        sudo apt-get install -y gnucobol  # Install GNU COBOL from the added repository
+        sudo apt-get install -y gnucobol || (echo "gnucobol installation failed, building from source..." && \
+        sudo apt-get install -y build-essential && \
+        sudo apt-get install -y autoconf automake libtool && \
+        git clone https://github.com/gnucobol/gnucobol.git && \
+        cd gnucobol && \
+        ./autogen.sh && \
+        ./configure && \
+        make && \
+        sudo make install)
 
     - name: Set up REXX (Install REXX interpreter)
       run: |
