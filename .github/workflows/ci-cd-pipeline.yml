@@ -16,10 +16,12 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Set up Java (for testing and building)
-      uses: actions/setup-java@v2
-      with:
-        java-version: '11'
+    - name: Set up JDK
+  uses: actions/setup-java@v2
+  with:
+    distribution: 'temurin' # Specify the Java distribution
+    java-version: '11'      # Specify the Java version required
+
 
     - name: Set up COBOL (Install COBOL compiler)
       run: |
