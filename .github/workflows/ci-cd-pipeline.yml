@@ -19,13 +19,13 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        distribution: 'temurin' # Specify the Java distribution
-        java-version: '11'      # Specify the Java version required
+        distribution: 'temurin'  # Specify the Java distribution
+        java-version: '11'       # Specify the Java version required
 
-    - name: Set up COBOL (Install COBOL compiler)
+    - name: Set up COBOL (Install GNU COBOL compiler)
       run: |
         sudo apt-get update
-        sudo apt-get install -y open-cobol
+        sudo apt-get install -y gnu-cobol  # Corrected to install GNU COBOL
 
     - name: Set up REXX (Install REXX interpreter)
       run: |
@@ -33,45 +33,45 @@ jobs:
 
     - name: Install necessary tools for JCL
       run: |
-        sudo apt-get install -y zowe-cli
+        sudo apt-get install -y zowe-cli  # Install Zowe CLI for JCL job execution
 
     - name: Run COBOL Job
       run: |
-        cd cobol
-        cobc -x hello_world.cbl -o hello_world # Compile the COBOL program
-        ./hello_world # Execute the COBOL program
+        cd cobol  # Change directory to 'cobol' folder
+        cobc -x hello_world.cbl -o hello_world  # Compile the COBOL program
+        ./hello_world  # Execute the compiled COBOL program
 
     - name: Run REXX Script
       run: |
-        cd rexx
-        rexx hello_world.rexx # Execute the REXX script
+        cd rexx  # Change directory to 'rexx' folder
+        rexx hello_world.rexx  # Execute the REXX script
 
     - name: Execute JCL Jobs
       run: |
-        cd jcl
-        zowe jobs submit lf run_cobol_job # Execute the COBOL JCL job
-        zowe jobs submit lf run_rexx_job  # Execute the REXX JCL job
+        cd jcl  # Change directory to 'jcl' folder
+        zowe jobs submit lf run_cobol_job  # Submit the COBOL JCL job
+        zowe jobs submit lf run_rexx_job  # Submit the REXX JCL job
 
     - name: Run Unit Tests
       run: |
-        echo "Running unit tests..."
-        # Add any unit testing commands if required
+        echo "Running unit tests..."  # Placeholder for unit tests
+        # Add any unit testing commands here if required
 
     - name: Deploy to QA Environment
       if: success()
       run: |
-        echo "Deploying to QA environment..."
-        # Add deployment commands here
+        echo "Deploying to QA environment..."  # Placeholder for QA deployment
+        # Add deployment commands here for QA environment
 
     - name: Deploy to Production Environment
       if: success()
       run: |
-        echo "Deploying to production..."
-        # Add production deployment commands here
+        echo "Deploying to production..."  # Placeholder for Production deployment
+        # Add deployment commands here for production environment
 
     - name: Notify Success
       run: |
-        echo "Pipeline executed successfully!"
+        echo "Pipeline executed successfully!"  # Notify success
 
   failure:
     runs-on: ubuntu-latest
@@ -79,4 +79,5 @@ jobs:
     steps:
     - name: Notify Failure
       run: |
-        echo "Pipeline execution failed. Rolling back changes."
+        echo "Pipeline execution failed. Rolling back changes."  # Notify failure
+
