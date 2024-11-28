@@ -25,7 +25,10 @@ jobs:
     - name: Set up COBOL (Install GNU COBOL compiler)
       run: |
         sudo apt-get update
-        sudo apt-get install -y gnu-cobol  # Corrected to install GNU COBOL
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository ppa:gnucobol/gnucobol-3.0
+        sudo apt-get update
+        sudo apt-get install -y gnucobol  # Install GNU COBOL from the added repository
 
     - name: Set up REXX (Install REXX interpreter)
       run: |
@@ -80,4 +83,3 @@ jobs:
     - name: Notify Failure
       run: |
         echo "Pipeline execution failed. Rolling back changes."  # Notify failure
-
