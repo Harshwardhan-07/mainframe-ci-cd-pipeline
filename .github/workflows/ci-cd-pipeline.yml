@@ -19,8 +19,8 @@ jobs:
     - name: Set up JDK (if needed for JCL integration)
       uses: actions/setup-java@v2
       with:
-        distribution: 'temurin'  # Specify the Java distribution
-        java-version: '11'       # Specify the Java version required
+        distribution: 'temurin'
+        java-version: '11'
 
     - name: Set up COBOL (Install GNU COBOL compiler)
       run: |
@@ -41,59 +41,57 @@ jobs:
 
     - name: Install Zowe CLI (Official Installation)
       run: |
-        # Install Node.js and npm (needed for Zowe CLI)
         sudo apt-get install -y nodejs npm
-        # Install Zowe CLI globally using npm
         sudo npm install -g @zowe/cli
+
+    - name: Debug Zowe CLI
+      run: |
+        zowe --version
+        zowe --help
 
     - name: Set up Zowe Profile (with GitHub Secrets)
       run: |
-        zowe profiles create zosmf-profile zos123 \
-          --host ${{ secrets.ZOSMF_HOST }} \
-          --port 10443 \
-          --user ${{ secrets.ZOSMF_USER }} \
-          --password ${{ secrets.ZOSMF_PASSWORD }} \
-          --ssl true
+        zowe config init --globalConfig
+        zowe config set zosmf.profiles.zos123.host=${{ secrets.ZOSMF_HOST }} --globalConfig
+        zowe config set zosmf.profiles.zos123.port=10443 --globalConfig
+        zowe config set zosmf.profiles.zos123.user=${{ secrets.ZOSMF_USER }} --globalConfig
+        zowe config set zosmf.profiles.zos123.password=${{ secrets.ZOSMF_PASSWORD }} --globalConfig
+        zowe config set zosmf.profiles.zos123.ssl=true --globalConfig
 
     - name: Run COBOL Job
       run: |
-        cd cobol  # Change directory to 'cobol' folder
-        cobc -x hello_world.cbl -o hello_world  # Compile the COBOL program
-        ./hello_world  # Execute the compiled COBOL program
+        cd cobol
+        cobc -x hello_world.cbl -o hello_world
+        ./hello_world
 
     - name: Run REXX Script
       run: |
-        cd rexx  # Change directory to 'rexx' folder
-        rexx hello_world.rexx  # Execute the REXX script
+        cd rexx
+        rexx hello_world.rexx
 
     - name: Execute JCL Jobs
       run: |
-        cd jcl  # Change directory to 'jcl' folder
-        # Submit the COBOL JCL job via Zowe CLI
-        zowe jobs submit lf run_cobol_job  # Assuming your JCL job name is 'run_cobol_job'
-        # Submit the REXX JCL job via Zowe CLI
-        zowe jobs submit lf run_rexx_job  # Assuming your JCL job name is 'run_rexx_job'
+        cd jcl
+        zowe jobs submit lf run_cobol_job
+        zowe jobs submit lf run_rexx_job
 
     - name: Run Unit Tests
       run: |
-        echo "Running unit tests..."  # Placeholder for unit tests
-        # Add unit testing commands for COBOL, REXX, or other tools as required
+        echo "Running unit tests..."
 
     - name: Deploy to QA Environment
       if: success()
       run: |
-        echo "Deploying to QA environment..."  # Placeholder for QA deployment
-        # Add deployment commands here for QA environment (e.g., upload files, notify team, etc.)
+        echo "Deploying to QA environment..."
 
     - name: Deploy to Production Environment
       if: success()
       run: |
-        echo "Deploying to production..."  # Placeholder for Production deployment
-        # Add deployment commands here for production environment
+        echo "Deploying to production..."
 
     - name: Notify Success
       run: |
-        echo "Pipeline executed successfully!"  # Notify success
+        echo "Pipeline executed successfully!"
 
   failure:
     runs-on: ubuntu-latest
@@ -101,4 +99,4 @@ jobs:
     steps:
     - name: Notify Failure
       run: |
-        echo "Pipeline execution failed. Rolling back changes."  # Notify failure
+        echo "Pipeline execution faile
