@@ -17,14 +17,14 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up JDK
-  uses: actions/setup-java@v2
-  with:
-    distribution: 'temurin' # Specify the Java distribution
-    java-version: '11'      # Specify the Java version required
-
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'temurin' # Specify the Java distribution
+        java-version: '11'      # Specify the Java version required
 
     - name: Set up COBOL (Install COBOL compiler)
       run: |
+        sudo apt-get update
         sudo apt-get install -y open-cobol
 
     - name: Set up REXX (Install REXX interpreter)
@@ -38,37 +38,36 @@ jobs:
     - name: Run COBOL Job
       run: |
         cd cobol
-        cobc -x your_cobol_program.cob # Replace with your COBOL file name
-        ./your_cobol_program
+        cobc -x hello_world.cbl -o hello_world # Compile the COBOL program
+        ./hello_world # Execute the COBOL program
 
     - name: Run REXX Script
       run: |
         cd rexx
-        rexx your_rexx_script.rex # Replace with your REXX file name
+        rexx hello_world.rexx # Execute the REXX script
 
     - name: Execute JCL Jobs
       run: |
         cd jcl
-        # Run your JCL jobs using Zowe CLI or scripts. Example:
-        zowe jobs submit -j run_cobol_job.jcl # Replace with your JCL file name
+        zowe jobs submit lf run_cobol_job # Execute the COBOL JCL job
+        zowe jobs submit lf run_rexx_job  # Execute the REXX JCL job
 
     - name: Run Unit Tests
       run: |
-        # Run unit tests for COBOL, REXX, and JCL
-        # You can integrate testing tools for each language
-        # Example: run_cobol_tests.sh or run_rexx_tests.sh
+        echo "Running unit tests..."
+        # Add any unit testing commands if required
 
     - name: Deploy to QA Environment
       if: success()
       run: |
-        # Deploy to QA or higher-level test environment, such as using Zowe CLI or custom deployment steps
-        echo "Deploying to QA environment"
+        echo "Deploying to QA environment..."
+        # Add deployment commands here
 
     - name: Deploy to Production Environment
       if: success()
       run: |
-        # Deploy to production, this can be another custom step
-        echo "Deploying to Production environment"
+        echo "Deploying to production..."
+        # Add production deployment commands here
 
     - name: Notify Success
       run: |
