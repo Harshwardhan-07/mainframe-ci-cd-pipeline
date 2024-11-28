@@ -39,9 +39,12 @@ jobs:
       run: |
         sudo apt-get install -y regina-rexx
 
-    - name: Install necessary tools for JCL
+    - name: Install Zowe CLI (Official Installation)
       run: |
-        sudo apt-get install -y zowe-cli  # Install Zowe CLI for JCL job execution
+        # Install Node.js and npm (needed for Zowe CLI)
+        sudo apt-get install -y nodejs npm
+        # Install Zowe CLI globally using npm
+        sudo npm install -g @zowe/cli
 
     - name: Run COBOL Job
       run: |
