@@ -16,7 +16,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Set up JDK
+    - name: Set up JDK (if needed for JCL integration)
       uses: actions/setup-java@v2
       with:
         distribution: 'temurin'  # Specify the Java distribution
@@ -45,7 +45,7 @@ jobs:
         sudo apt-get install -y nodejs npm
         # Install Zowe CLI globally using npm
         sudo npm install -g @zowe/cli
-        
+
     - name: Set up Zowe Profile (with GitHub Secrets)
       run: |
         zowe profiles create zosmf-profile zos123 \
@@ -69,19 +69,21 @@ jobs:
     - name: Execute JCL Jobs
       run: |
         cd jcl  # Change directory to 'jcl' folder
-        zowe jobs submit lf run_cobol_job  # Submit the COBOL JCL job
-        zowe jobs submit lf run_rexx_job  # Submit the REXX JCL job
+        # Submit the COBOL JCL job via Zowe CLI
+        zowe jobs submit lf run_cobol_job  # Assuming your JCL job name is 'run_cobol_job'
+        # Submit the REXX JCL job via Zowe CLI
+        zowe jobs submit lf run_rexx_job  # Assuming your JCL job name is 'run_rexx_job'
 
     - name: Run Unit Tests
       run: |
         echo "Running unit tests..."  # Placeholder for unit tests
-        # Add any unit testing commands here if required
+        # Add unit testing commands for COBOL, REXX, or other tools as required
 
     - name: Deploy to QA Environment
       if: success()
       run: |
         echo "Deploying to QA environment..."  # Placeholder for QA deployment
-        # Add deployment commands here for QA environment
+        # Add deployment commands here for QA environment (e.g., upload files, notify team, etc.)
 
     - name: Deploy to Production Environment
       if: success()
