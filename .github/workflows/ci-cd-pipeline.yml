@@ -45,6 +45,15 @@ jobs:
         sudo apt-get install -y nodejs npm
         # Install Zowe CLI globally using npm
         sudo npm install -g @zowe/cli
+        
+    - name: Set up Zowe Profile (with GitHub Secrets)
+      run: |
+        zowe profiles create zosmf-profile zos123 \
+          --host ${{ secrets.ZOSMF_HOST }} \
+          --port 10443 \
+          --user ${{ secrets.ZOSMF_USER }} \
+          --password ${{ secrets.ZOSMF_PASSWORD }} \
+          --ssl true
 
     - name: Run COBOL Job
       run: |
